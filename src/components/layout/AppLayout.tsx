@@ -1,6 +1,6 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Menu, LayoutDashboard, Users, Swords, MapPin, Trophy, LineChart } from 'lucide-react';
 import { DesktopSidebar, Sidebar } from './Sidebar';
 import { useAppStore } from '@/store/useAppStore';
@@ -16,7 +16,6 @@ const MOBILE_NAV_ITEMS = [
 
 export function AppLayout() {
   const { theme, language, toggleSidebar } = useAppStore();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isDark = theme === 'dark';
 
@@ -27,19 +26,10 @@ export function AppLayout() {
     else root.classList.remove('light');
   }, [theme]);
 
-  // Close mobile menu on route change
-  useEffect(() => { setMobileMenuOpen(false); }, [location.pathname]);
-
-  // Scroll to top
+  // Scroll to top on route change
   useEffect(() => {
     document.querySelector('main')?.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
-
-  // Prevent body scroll when mobile menu open
-  useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [mobileMenuOpen]);
 
   const bgStyle = isDark
     ? { background: 'radial-gradient(ellipse at 20% 50%, #0A1530 0%, #0A1128 40%, #060B15 70%, #040810 100%)' }
@@ -50,26 +40,8 @@ export function AppLayout() {
       {/* Desktop Sidebar */}
       <DesktopSidebar />
 
-      {/* Mobile Sidebar Overlay */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            <motion.div
-              initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 z-50 h-full w-[280px] lg:hidden"
-              style={{ backgroundColor: isDark ? '#060B15' : '#ffffff' }}
-            >
-              <Sidebar />
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Mobile Sidebar — uses store's sidebarOpen, handles its own overlay internally */}
+      <Sidebar />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -83,7 +55,7 @@ export function AppLayout() {
           }}
         >
           <button
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={toggleSidebar}
             className="p-2 rounded-lg transition-colors active:scale-95"
             style={{ color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)' }}
             aria-label="Open menu"
