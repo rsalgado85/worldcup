@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTeams, useMatches, useStadiums } from '@/hooks/useQueries';
 import { Users, MapPin, Swords, Calendar, Globe, ChevronDown, Trophy, Flag, Clock, Flame } from 'lucide-react';
 import type { Match } from '@/types';
@@ -40,19 +40,44 @@ function CountryCard({ flag, name, venues, matches, delay = 0 }: {
   );
 }
 
-// ─── Player Pitch ───
-function PlayerPitch({ selectedTeam, onTeamChange, teams }: {
+// ─── Player Pitch (dynamic with real data) ───
+function PlayerPitch({ selectedTeam, onTeamChange, teams, matches }: {
   selectedTeam: string;
   onTeamChange: (v: string) => void;
   teams: string[];
+  matches: Match[];
 }) {
-  // Position distribution (simulated)
-  const totalPlayers = 29;
-  const forwards = 6;   // 20.7%
-  const midfielders = 6; // 20.7%
-  const defenders = 10;  // 34.5%
-  const goalkeepers = 3; // 10.3%
-  const others = 4;      // 13.8%
+  // Extract players from match data for selected team
+  const teamPlayers = useMemo(() => {
+    const players = new Map<string, { name: string; goals: number }>();
+    matches.forEach((m) => {
+      if (m.home_team_name_en === selectedTeam || m.away_team_name_en === selectedTeam) {
+        const scorers = m.home_team_name_en === selectedTeam ? m.home_scorers : m.away_scorers;
+        if (scorers && scorers !== 'null') {
+          try {
+            const cleaned = scorers.replace(/'/g, '"').replace(/"/g, '"').replace(/"/g, '"');
+            const names = JSON.parse(cleaned);
+            if (Array.isArray(names)) {
+              names.forEach((n: string) => {
+                const name = n.replace(/\s*\d+\+?\d*'?\s*$/, '').trim();
+                if (name && name !== 'null') {
+                  const existing = players.get(name);
+                  if (existing) existing.goals++;
+                  else players.set(name, { name, goals: 1 });
+                }
+              });
+            }
+          } catch {}
+        }
+      }
+    });
+    return Array.from(players.values()).sort((a, b) => b.goals - a.goals);
+  }, [matches, selectedTeam]);
+
+  const totalPlayers = teamPlayers.length || 23;
+  const forwards = teamPlayers.slice(0, Math.ceil(teamPlayers.length * 0.3));
+  const midfielders = teamPlayers.slice(forwards.length, forwards.length + Math.ceil(teamPlayers.length * 0.35));
+  const defenders = teamPlayers.slice(forwards.length + midfielders.length);
 
   return (
     <div className="animate-fade-up" style={{ animationDelay: '0.3s' }}>
@@ -64,51 +89,49 @@ function PlayerPitch({ selectedTeam, onTeamChange, teams }: {
           className="w-full appearance-none bg-navy-700 border border-border-card rounded-xl px-4 py-2.5 pr-10 text-sm font-medium text-white focus:outline-none focus:border-accent-teal/30 cursor-pointer"
         >
           <option value="" disabled>SELECCIÓN</option>
-          {teams.map((t) => (
-            <option key={t} value={t}>{t}</option>
-          ))}
+          {teams.map((t) => (<option key={t} value={t}>{t}</option>))}
         </select>
         <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
       </div>
 
       {/* Pitch */}
       <div className="relative bg-[#0d4a22] rounded-2xl overflow-hidden border border-border-card mb-4"
-        style={{ height: 200 }}>
+        style={{ height: 220 }}>
         {/* Pitch markings */}
         <div className="absolute inset-4 border border-white/15 rounded-full" />
         <div className="absolute top-1/2 left-4 right-4 h-px bg-white/10" />
         <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/10" />
-        {/* Center circle */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-white/10" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white/20" />
-        {/* Penalty areas */}
         <div className="absolute top-4 left-[20%] right-[20%] h-[30%] border border-white/10 rounded-b-full" />
         <div className="absolute bottom-4 left-[20%] right-[20%] h-[30%] border border-white/10 rounded-t-full" />
-        {/* Goal areas */}
-        <div className="absolute top-4 left-[35%] right-[35%] h-[12%] border border-white/10 rounded-b-full" />
-        <div className="absolute bottom-4 left-[35%] right-[35%] h-[12%] border border-white/10 rounded-t-full" />
 
-        {/* Players - defenders (blue dots at back) */}
-        {[...Array(4)].map((_, i) => (
-          <div key={`def-${i}`}
-            className="absolute w-2.5 h-2.5 rounded-full bg-blue-400 shadow-[0_0_6px_rgba(96,165,250,0.5)]"
-            style={{ bottom: '22%', left: `${20 + i * 18}%` }} />
+        {/* Forwards (top, red dots + names) */}
+        {forwards.map((p, i) => (
+          <div key={`fwd-${i}`} className="absolute flex flex-col items-center gap-0.5"
+            style={{ top: '12%', left: `${15 + i * (70 / Math.max(forwards.length, 1))}%`, transform: 'translateX(-50%)' }}>
+            <MiniPlayerPhoto name={p.name} />
+            <span className="text-[7px] text-white/70 text-center leading-tight max-w-[50px] truncate">{p.name.split(' ').pop()}</span>
+          </div>
         ))}
-        {/* Midfielders (blue dots in middle) */}
-        {[...Array(3)].map((_, i) => (
-          <div key={`mid-${i}`}
-            className="absolute w-2.5 h-2.5 rounded-full bg-blue-400 shadow-[0_0_6px_rgba(96,165,250,0.5)]"
-            style={{ top: '42%', left: `${25 + i * 22}%` }} />
+
+        {/* Midfielders (middle, blue dots + names) */}
+        {midfielders.map((p, i) => (
+          <div key={`mid-${i}`} className="absolute flex flex-col items-center gap-0.5"
+            style={{ top: '42%', left: `${15 + i * (70 / Math.max(midfielders.length, 1))}%`, transform: 'translateX(-50%)' }}>
+            <MiniPlayerPhoto name={p.name} />
+            <span className="text-[7px] text-white/70 text-center leading-tight max-w-[50px] truncate">{p.name.split(' ').pop()}</span>
+          </div>
         ))}
-        {/* Forwards (red dots at front) */}
-        {[...Array(3)].map((_, i) => (
-          <div key={`fwd-${i}`}
-            className="absolute w-2.5 h-2.5 rounded-full bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.5)]"
-            style={{ top: '18%', left: `${18 + i * 28}%` }} />
+
+        {/* Defenders (bottom, amber dots + names) */}
+        {defenders.slice(0, 5).map((p, i) => (
+          <div key={`def-${i}`} className="absolute flex flex-col items-center gap-0.5"
+            style={{ bottom: '12%', left: `${15 + i * (70 / Math.max(Math.min(defenders.length, 5), 1))}%`, transform: 'translateX(-50%)' }}>
+            <MiniPlayerPhoto name={p.name} />
+            <span className="text-[7px] text-white/70 text-center leading-tight max-w-[50px] truncate">{p.name.split(' ').pop()}</span>
+          </div>
         ))}
-        <p className="absolute bottom-5 left-0 right-0 text-center text-[9px] text-white/30 font-medium uppercase tracking-widest">
-          Formación 4-3-3
-        </p>
       </div>
 
       {/* Stats Panel */}
@@ -118,11 +141,36 @@ function PlayerPitch({ selectedTeam, onTeamChange, teams }: {
           <span className="text-lg font-black text-white">{totalPlayers}</span>
         </div>
         <div className="space-y-2">
-          <PositionBar label="DELANTEROS" percent={Math.round((forwards / totalPlayers) * 100)} color="bg-red-400" />
-          <PositionBar label="CENTROCAMPISTAS" percent={Math.round((midfielders / totalPlayers) * 100)} color="bg-blue-400" />
-          <PositionBar label="DEFENSAS" percent={Math.round((defenders / totalPlayers) * 100)} color="bg-amber-400" />
+          <PositionBar label="DELANTEROS" percent={Math.round((forwards.length / Math.max(totalPlayers, 1)) * 100)} color="bg-red-400" />
+          <PositionBar label="CENTROCAMPISTAS" percent={Math.round((midfielders.length / Math.max(totalPlayers, 1)) * 100)} color="bg-blue-400" />
+          <PositionBar label="DEFENSAS" percent={Math.round((defenders.length / Math.max(totalPlayers, 1)) * 100)} color="bg-amber-400" />
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── Mini Player Photo ───
+function MiniPlayerPhoto({ name }: { name: string }) {
+  const [photo, setPhoto] = useState<string | null>(null);
+  useEffect(() => {
+    let c = false;
+    const wikiName = name.replace(/\s+/g, '_');
+    fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiName)}`, {
+      headers: { 'User-Agent': 'WCInsight/1.0' }
+    }).then(r => r.json()).then(d => {
+      if (!c && d.thumbnail?.source) setPhoto(d.thumbnail.source);
+    }).catch(() => {});
+    return () => { c = true; };
+  }, [name]);
+
+  if (photo) {
+    return <img src={photo} alt={name} className="w-8 h-8 rounded-full object-cover border border-white/20 shadow-lg" />;
+  }
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  return (
+    <div className="w-8 h-8 rounded-full bg-navy-600 border border-white/10 flex items-center justify-center">
+      <span className="text-[8px] font-bold text-white/50">{initials}</span>
     </div>
   );
 }
@@ -459,6 +507,7 @@ export function DashboardPage() {
               selectedTeam={selectedTeam}
               onTeamChange={setSelectedTeam}
               teams={teamNames}
+              matches={matches ?? []}
             />
           </div>
 

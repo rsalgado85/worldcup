@@ -7,15 +7,21 @@ import type { Stadium } from '@/types';
 // ─── Image mapping ───
 const STADIUM_IMAGES: Record<string, string[]> = {
   'MetLife Stadium': ['/images/stadiums/official/metlife.jpg'],
-  'BC Place': [
-    '/images/stadiums/vancouver-bcplace.jpg',
-    '/images/stadiums/stadium-1.jpg',
-    '/images/stadiums/stadium-2.jpg',
-    '/images/stadiums/stadium-3.jpg',
-  ],
-  'Estadio Azteca': ['/images/stadiums/official/azteca.jpg'],
   'AT&T Stadium': ['/images/stadiums/official/att.jpg'],
+  'Arrowhead Stadium': ['/images/stadiums/official/arrowhead.jpg'],
+  'Mercedes-Benz Stadium': ['/images/stadiums/official/mercedes-benz.jpg'],
+  'Hard Rock Stadium': ['/images/stadiums/official/hardrock.jpg'],
+  'Lincoln Financial Field': ['/images/stadiums/official/lincoln.jpg'],
+  "Levi's Stadium": ['/images/stadiums/official/levis.jpg'],
+  'Lumen Field': ['/images/stadiums/official/lumen.jpg'],
+  'NRG Stadium': ['/images/stadiums/official/nrg.jpg'],
   'SoFi Stadium': ['/images/stadiums/official/sofi.jpg'],
+  'Gillette Stadium': ['/images/stadiums/official/gillette.jpg'],
+  'Estadio Azteca': ['/images/stadiums/official/azteca.jpg'],
+  'Estadio BBVA': ['/images/stadiums/official/bbva.jpg'],
+  'Estadio Akron': ['/images/stadiums/official/akron.jpg'],
+  'BC Place': ['/images/stadiums/official/bcplace.jpg', '/images/stadiums/vancouver-bcplace.jpg'],
+  'BMO Field': ['/images/stadiums/official/bmo.jpg'],
 };
 
 // ─── Stadium Card ───
