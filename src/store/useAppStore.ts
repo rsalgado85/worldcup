@@ -1,14 +1,20 @@
 import { create } from 'zustand';
-import type { ViewMode } from '@/types';
+
+type Theme = 'dark' | 'light';
+type Language = 'es' | 'en';
 
 interface AppState {
-  viewMode: ViewMode;
-  setViewMode: (mode: ViewMode) => void;
+  viewMode: string;
+  setViewMode: (mode: string) => void;
   sidebarOpen: boolean;
   toggleSidebar: () => void;
   setSidebarOpen: (open: boolean) => void;
   sidebarCollapsed: boolean;
   toggleSidebarCollapsed: () => void;
+  theme: Theme;
+  toggleTheme: () => void;
+  language: Language;
+  toggleLanguage: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -19,4 +25,8 @@ export const useAppStore = create<AppState>((set) => ({
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   sidebarCollapsed: false,
   toggleSidebarCollapsed: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
+  theme: 'dark',
+  toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
+  language: 'es',
+  toggleLanguage: () => set((s) => ({ language: s.language === 'es' ? 'en' : 'es' })),
 }));

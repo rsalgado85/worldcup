@@ -1,50 +1,104 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Menu } from 'lucide-react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, LayoutDashboard, Users, Swords, MapPin, Trophy, LineChart } from 'lucide-react';
 import { DesktopSidebar, Sidebar } from './Sidebar';
 import { useAppStore } from '@/store/useAppStore';
 
-export function AppLayout() {
-  const { toggleSidebar } = useAppStore();
-  const location = useLocation();
+const MOBILE_NAV_ITEMS = [
+  { path: '/resumen', icon: LayoutDashboard, labelEs: 'Inicio', labelEn: 'Home' },
+  { path: '/top-jugadores', icon: Users, labelEs: 'Jugadores', labelEn: 'Players' },
+  { path: '/matches', icon: Swords, labelEs: 'Partidos', labelEn: 'Matches' },
+  { path: '/teams', icon: Trophy, labelEs: 'Equipos', labelEn: 'Teams' },
+  { path: '/stadiums', icon: MapPin, labelEs: 'Estadios', labelEn: 'Stadiums' },
+  { path: '/rankings', icon: LineChart, labelEs: 'Rankings', labelEn: 'Rankings' },
+];
 
-  // Scroll to top on route change
+export function AppLayout() {
+  const { theme, language, toggleSidebar } = useAppStore();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isDark = theme === 'dark';
+
+  // Apply theme class
   useEffect(() => {
-    const main = document.querySelector('main');
-    main?.scrollTo({ top: 0, behavior: 'instant' });
+    const root = document.documentElement;
+    if (theme === 'light') root.classList.add('light');
+    else root.classList.remove('light');
+  }, [theme]);
+
+  // Close mobile menu on route change
+  useEffect(() => { setMobileMenuOpen(false); }, [location.pathname]);
+
+  // Scroll to top
+  useEffect(() => {
+    document.querySelector('main')?.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
 
+  // Prevent body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileMenuOpen]);
+
+  const bgStyle = isDark
+    ? { background: 'radial-gradient(ellipse at 20% 50%, #0A1530 0%, #0A1128 40%, #060B15 70%, #040810 100%)' }
+    : { background: 'radial-gradient(ellipse at 20% 50%, #F0F4FF 0%, #E8ECF4 40%, #F5F0E8 70%, #FAFAFA 100%)' };
+
   return (
-    <div
-      className="flex h-screen overflow-hidden"
-      style={{
-        background: 'radial-gradient(ellipse at 20% 50%, #0A1530 0%, #0A1128 40%, #060B15 70%, #040810 100%)',
-      }}
-    >
+    <div className="flex h-screen overflow-hidden" style={bgStyle}>
       {/* Desktop Sidebar */}
       <DesktopSidebar />
 
-      {/* Mobile Sidebar */}
-      <Sidebar />
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed left-0 top-0 z-50 h-full w-[280px] lg:hidden"
+              style={{ backgroundColor: isDark ? '#060B15' : '#ffffff' }}
+            >
+              <Sidebar />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile Header */}
+        {/* Top Title Bar (HyruleDex style) */}
         <header
           className="lg:hidden flex items-center justify-between px-3 py-3 flex-shrink-0"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+          style={{
+            borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.06)'}`,
+            backgroundColor: isDark ? 'transparent' : 'rgba(255,255,255,0.8)',
+            backdropFilter: isDark ? 'none' : 'blur(12px)',
+          }}
         >
           <button
-            onClick={toggleSidebar}
-            className="p-2 rounded-lg transition-colors active:scale-95 text-text-secondary"
+            onClick={() => setMobileMenuOpen(true)}
+            className="p-2 rounded-lg transition-colors active:scale-95"
+            style={{ color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)' }}
             aria-label="Open menu"
           >
             <Menu size={22} />
           </button>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-black tracking-tight text-white">
-              WORLD<span className="text-accent-teal">CUP</span> 2026
+            <div
+              className="w-7 h-7 rounded-lg flex items-center justify-center p-0.5"
+              style={{ background: `linear-gradient(135deg, #F5A623, #14B8A6)`, boxShadow: '0 0 12px rgba(20,184,166,0.15)' }}
+            >
+              <img src="/images/fifa-2026-logo.png" alt="FIFA" className="w-full h-full object-contain" />
+            </div>
+            <span className="text-sm font-black tracking-tight" style={{ color: isDark ? '#ffffff' : '#1A1510' }}>
+              WORLD<span style={{ color: '#14B8A6' }}>CUP</span> 2026
             </span>
           </div>
           <div className="w-9" />
@@ -62,16 +116,60 @@ export function AppLayout() {
           </motion.div>
         </main>
 
-        {/* Footer */}
+        {/* Mobile Bottom Nav */}
+        <MobileBottomNav />
+
+        {/* Footer (desktop only) */}
         <footer
-          className="hidden lg:block py-3 px-4 md:px-6 lg:px-8 text-center flex-shrink-0"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+          className="hidden lg:block py-3 px-4 text-center flex-shrink-0"
+          style={{ borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}` }}
         >
-          <p className="text-[10px] text-text-muted/30">
+          <p className="text-[10px]" style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' }}>
             &copy; {new Date().getFullYear()} WorldCup Insight — FIFA World Cup 2026&trade;
           </p>
         </footer>
       </div>
     </div>
+  );
+}
+
+// ─── Mobile Bottom Nav ───
+function MobileBottomNav() {
+  const { theme, language } = useAppStore();
+  const isDark = theme === 'dark';
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  return (
+    <nav
+      className="lg:hidden flex items-center justify-around px-1 py-1 flex-shrink-0"
+      style={{
+        backgroundColor: isDark ? 'rgba(6, 11, 21, 0.97)' : 'rgba(255, 255, 255, 0.97)',
+        borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+      }}
+      aria-label="Mobile navigation"
+    >
+      {MOBILE_NAV_ITEMS.map((item) => {
+        const Icon = item.icon;
+        const isActive = item.path === '/resumen'
+          ? location.pathname === '/' || location.pathname === '/resumen'
+          : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+        const label = language === 'es' ? item.labelEs : item.labelEn;
+        return (
+          <button
+            key={item.path}
+            onClick={() => navigate(item.path)}
+            className="flex flex-col items-center gap-0.5 py-1 px-1.5 min-w-0 transition-all active:scale-90"
+            style={{ color: isActive ? '#14B8A6' : isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)' }}
+            aria-label={label}
+          >
+            <Icon size={18} />
+            <span className="text-[8px] font-semibold truncate max-w-full">{label}</span>
+          </button>
+        );
+      })}
+    </nav>
   );
 }
