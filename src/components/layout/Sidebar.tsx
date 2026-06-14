@@ -1,13 +1,63 @@
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Home, BarChart3, UserRound, X } from 'lucide-react';
+import {
+  Trophy, Home, BarChart3, UserRound, X,
+  Users, Swords, MapPin, Medal, LineChart, Brain,
+} from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 
-const navItems = [
-  { path: '/', label: 'INICIO', icon: Home },
-  { path: '/resumen', label: 'RESUMEN', icon: BarChart3 },
+const mainItems = [
+  { path: '/resumen', label: 'INICIO', icon: Home },
   { path: '/top-jugadores', label: 'TOP JUGADORES', icon: UserRound },
 ];
+
+const moreItems = [
+  { path: '/teams', label: 'Equipos', icon: Users },
+  { path: '/matches', label: 'Partidos', icon: Swords },
+  { path: '/stadiums', label: 'Estadios', icon: MapPin },
+  { path: '/bracket', label: 'Bracket', icon: Trophy },
+  { path: '/rankings', label: 'Rankings', icon: LineChart },
+  { path: '/predictions', label: 'Predicciones', icon: Brain },
+];
+
+function NavItem({ item, onClose }: { item: typeof mainItems[0]; onClose?: () => void }) {
+  return (
+    <NavLink
+      to={item.path}
+      end={item.path === '/resumen'}
+      onClick={onClose}
+      className={({ isActive }) =>
+        `flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-semibold tracking-wider transition-all duration-200 ${
+          isActive
+            ? 'bg-accent-teal/10 text-accent-teal border-l-[3px] border-accent-teal'
+            : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.03] border-l-[3px] border-transparent'
+        }`
+      }
+    >
+      <item.icon size={16} />
+      {item.label}
+    </NavLink>
+  );
+}
+
+function SmallNavItem({ item, onClose }: { item: typeof moreItems[0]; onClose?: () => void }) {
+  return (
+    <NavLink
+      to={item.path}
+      onClick={onClose}
+      className={({ isActive }) =>
+        `flex items-center gap-2.5 px-4 py-2 rounded-lg text-[10px] font-medium transition-all duration-200 ${
+          isActive
+            ? 'bg-accent-teal/10 text-accent-teal border-l-[2px] border-accent-teal'
+            : 'text-text-muted hover:text-text-secondary hover:bg-white/[0.02] border-l-[2px] border-transparent'
+        }`
+      }
+    >
+      <item.icon size={13} />
+      {item.label}
+    </NavLink>
+  );
+}
 
 export function Sidebar() {
   const { sidebarOpen, setSidebarOpen } = useAppStore();
@@ -60,24 +110,20 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-4 px-2 space-y-1">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.path === '/'}
-            onClick={onClose}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-semibold tracking-wider transition-all duration-200 ${
-                isActive
-                  ? 'bg-accent-teal/10 text-accent-teal border-l-[3px] border-accent-teal'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.03] border-l-[3px] border-transparent'
-              }`
-            }
-          >
-            <item.icon size={16} />
-            {item.label}
-          </NavLink>
+      <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-1">
+        {/* Main items */}
+        {mainItems.map((item) => (
+          <NavItem key={item.path} item={item} onClose={onClose} />
+        ))}
+
+        {/* Divider */}
+        <div className="pt-3 pb-1 px-4">
+          <p className="text-[8px] font-bold text-text-muted uppercase tracking-[0.15em]">Torneo</p>
+        </div>
+
+        {/* Secondary items (smaller) */}
+        {moreItems.map((item) => (
+          <SmallNavItem key={item.path} item={item} onClose={onClose} />
         ))}
       </nav>
 

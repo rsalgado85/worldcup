@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTeams, useMatches, useStadiums } from '@/hooks/useQueries';
-import { Users, MapPin, Swords, Calendar, Globe, ChevronDown, Trophy, Flag, Clock } from 'lucide-react';
+import { Users, MapPin, Swords, Calendar, Globe, ChevronDown, Trophy, Flag, Clock, Flame } from 'lucide-react';
+import type { Match } from '@/types';
 
 // ─── Stats Badge ───
 function StatBadge({ icon: Icon, value, label, delay = 0 }: {
@@ -208,6 +209,124 @@ function HighlightedFacts() {
   );
 }
 
+// ─── Today's Matches ───
+function TodayMatches({ matches }: { matches: Match[] }) {
+  const today = useMemo(() => {
+    const d = new Date();
+    return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`;
+  }, []);
+
+  const todayMatches = useMemo(() => {
+    if (!matches?.length) return [];
+    return matches
+      .filter((m) => m.local_date?.startsWith(today))
+      .sort((a, b) => (a.local_date || '').localeCompare(b.local_date || ''));
+  }, [matches, today]);
+
+  const upcomingMatches = useMemo(() => {
+    if (!matches?.length || todayMatches.length > 0) return [];
+    const now = new Date();
+    return matches
+      .filter((m) => {
+        if (!m.local_date || m.finished === 'TRUE') return false;
+        const [d, t] = m.local_date.split(' ');
+        const [mo, day, yr] = d.split('/');
+        const matchDate = new Date(`${yr}-${mo}-${day}T${t || '00:00'}`);
+        return matchDate >= now;
+      })
+      .sort((a, b) => (a.local_date || '').localeCompare(b.local_date || ''))
+      .slice(0, 4);
+  }, [matches, todayMatches]);
+
+  const displayMatches = todayMatches.length > 0 ? todayMatches : upcomingMatches;
+  const sectionTitle = todayMatches.length > 0 ? 'PARTIDOS DE HOY' : 'PRÓXIMOS PARTIDOS';
+
+  if (!displayMatches.length) return null;
+
+  return (
+    <div className="card-dark p-5 animate-fade-up" style={{ animationDelay: '0.25s' }}>
+      <div className="flex items-center gap-2 mb-4">
+        {todayMatches.length > 0 && (
+          <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 text-[9px] font-bold uppercase animate-pulse">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+            EN VIVO
+          </span>
+        )}
+        <h3 className="text-sm font-bold uppercase tracking-wider text-accent-teal">
+          {sectionTitle}
+        </h3>
+        <span className="text-[10px] text-text-muted ml-auto">{today}</span>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {displayMatches.map((m) => {
+          const hasScores = m.home_score !== 'null' && m.home_score !== '' && m.home_score !== '0' || m.away_score !== 'null' && m.away_score !== '' && m.away_score !== '0';
+          const isFinished = m.finished === 'TRUE';
+          const isLive = !isFinished && (m.home_score !== 'null' && m.home_score !== '');
+          const time = m.local_date?.split(' ')[1]?.slice(0, 5) || '';
+
+          return (
+            <div key={m.id}
+              className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
+                isLive ? 'bg-red-500/5 border border-red-500/10' :
+                isFinished ? 'bg-navy-700/30' :
+                'bg-navy-700/20'
+              }`}
+            >
+              {/* Home team */}
+              <div className="flex-1 min-w-0 text-right">
+                <p className="text-xs font-semibold text-white truncate">{m.home_team_name_en}</p>
+              </div>
+
+              {/* Score / Time */}
+              <div className="flex-shrink-0 text-center min-w-[50px]">
+                {isLive ? (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-black text-white">{m.home_score}</span>
+                    <span className="text-[10px] text-red-400 font-bold">-</span>
+                    <span className="text-sm font-black text-white">{m.away_score}</span>
+                  </div>
+                ) : isFinished ? (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-bold text-text-secondary">{m.home_score}</span>
+                    <span className="text-[10px] text-text-muted">-</span>
+                    <span className="text-sm font-bold text-text-secondary">{m.away_score}</span>
+                  </div>
+                ) : (
+                  <span className="text-xs font-bold text-accent-teal">{time}</span>
+                )}
+                {/* Status badge */}
+                <div className="mt-0.5">
+                  {isLive && (
+                    <span className="text-[8px] font-bold text-red-400 uppercase animate-pulse">LIVE {m.time_elapsed}'</span>
+                  )}
+                  {isFinished && (
+                    <span className="text-[8px] font-medium text-text-muted uppercase">FINAL</span>
+                  )}
+                  {!isLive && !isFinished && (
+                    <span className="text-[8px] text-text-muted uppercase">{m.group}</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Away team */}
+              <div className="flex-1 min-w-0 text-left">
+                <p className="text-xs font-semibold text-white truncate">{m.away_team_name_en}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {todayMatches.length === 0 && (
+        <p className="text-[10px] text-text-muted text-center mt-3">
+          No hay partidos programados para hoy. Mostrando los próximos encuentros.
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ═══════════════════════════════ MAIN DASHBOARD ═══════════════════════════════
 export function DashboardPage() {
   const { data: teams } = useTeams();
@@ -262,6 +381,9 @@ export function DashboardPage() {
         <StatBadge icon={Calendar} value="39" label="DÍAS" delay={0.35} />
         <StatBadge icon={Globe} value="+7M" label="AFICIONADOS" delay={0.4} />
       </div>
+
+      {/* ═══ TODAY'S MATCHES ═══ */}
+      <TodayMatches matches={matches ?? []} />
 
       {/* ═══ MAIN GRID: 2 Columns ═══ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
