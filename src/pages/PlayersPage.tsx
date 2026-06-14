@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
 import type { Team } from '@/types';
+import { PageWrapper, PageHeader, StatsGrid, SearchInput, EmptyState, LoadingSpinner } from '@/components/ui/design-system';
 
 interface ScorerData {
   name: string;
@@ -383,63 +384,33 @@ export function PlayersPage() {
   const maxGoals = players[0]?.goals ?? 1;
   const topScorer = players[0];
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-accent-teal border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  if (isLoading) return <PageWrapper><LoadingSpinner /></PageWrapper>;
+
+  const statsItems = [
+    { icon: Users, value: players.length, label: 'Goleadores', color: '#14B8A6', subtitle: 'En el torneo' },
+    { icon: Target, value: totalGoals, label: 'Goles totales', color: '#FF6B35', subtitle: 'Anotados' },
+    { icon: Medal, value: topScorer?.goals ?? 0, label: 'Máximo', color: '#F5A623', subtitle: topScorer?.name ?? 'Goleador' },
+    { icon: Trophy, value: new Set(players.map(p => p.teamId)).size, label: 'Equipos', color: '#3B82F6', subtitle: 'Con goles' },
+  ];
 
   return (
-    <div className="p-5 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
-      {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-accent-teal/10 flex items-center justify-center" style={{ border: '1px solid rgba(20,184,166,0.2)' }}>
-            <UserRound size={20} className="text-accent-teal" />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">Top Jugadores</h1>
-            <p className="text-sm text-text-secondary">{players.length} goleadores · {totalGoals} goles en el torneo</p>
-          </div>
-        </div>
-      </motion.div>
+    <PageWrapper>
+      <PageHeader
+        icon={UserRound}
+        title="Top Jugadores"
+        subtitle={`${players.length} goleadores · ${totalGoals} goles en el torneo`}
+      />
 
-      {/* Stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[
-          { icon: Users, value: players.length, label: 'Goleadores', color: '#14B8A6' },
-          { icon: Target, value: totalGoals, label: 'Goles totales', color: '#FF6B35' },
-          { icon: Medal, value: topScorer?.goals ?? 0, label: 'Máximo goleador', color: '#F5A623' },
-          { icon: Trophy, value: new Set(players.map(p => p.teamId)).size, label: 'Equipos con gol', color: '#60A5FA' },
-        ].map((s, i) => (
-          <motion.div
-            key={s.label}
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
-            className="rounded-xl p-4 text-center"
-            style={{ background: `${s.color}0A`, border: `1px solid ${s.color}18` }}
-          >
-            <s.icon size={20} className="mx-auto mb-1.5" style={{ color: s.color }} />
-            <p className="text-xl font-black text-white">{s.value}</p>
-            <p className="text-[10px] text-text-muted uppercase tracking-wider mt-0.5">{s.label}</p>
-          </motion.div>
-        ))}
-      </div>
+      <StatsGrid items={statsItems} columns={4} />
 
       {/* Search + Sort */}
       <div className="flex items-center gap-3 flex-wrap">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted" size={16} />
-          <input
-            type="text" value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="Buscar jugador o equipo..."
-            className="w-full bg-navy-700/50 border border-border-card rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder:text-text-muted focus:outline-none focus:border-accent-teal/30 transition-colors"
-          />
+        <div className="flex-1 max-w-md">
+          <SearchInput value={search} onChange={setSearch} placeholder="Buscar jugador o equipo..." />
         </div>
         <button
           onClick={() => setSortBy(sortBy === 'goals' ? 'name' : 'goals')}
-          className="flex items-center gap-1.5 px-5 py-3 rounded-xl text-xs font-semibold bg-navy-700/50 border border-border-card text-text-secondary hover:bg-navy-600/50 hover:text-white transition-all"
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold bg-navy-700/50 border border-border-card text-text-secondary hover:bg-navy-600/50 hover:text-white transition-all"
         >
           {sortBy === 'goals' ? '🔥 Por goles' : '🔤 Alfabético'}
         </button>
@@ -463,10 +434,7 @@ export function PlayersPage() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-20">
-          <UserRound size={48} className="mx-auto mb-4 text-text-muted/20" />
-          <p className="text-sm text-text-muted">No se encontraron jugadores</p>
-        </div>
+        <EmptyState icon={UserRound} message="No se encontraron jugadores" />
       )}
 
       {/* Detail Modal */}
@@ -475,6 +443,6 @@ export function PlayersPage() {
           <PlayerDetailModal player={selectedPlayer} onClose={() => setSelectedPlayer(null)} />
         )}
       </AnimatePresence>
-    </div>
+    </PageWrapper>
   );
 }

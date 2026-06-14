@@ -4,20 +4,21 @@ import { Users, MapPin, Swords, Calendar, Globe, ChevronDown, Trophy, Flag, Cloc
 import type { Match } from '@/types';
 
 // ─── Stats Badge ───
-function StatBadge({ icon: Icon, value, label, delay = 0 }: {
+function StatBadge({ icon: Icon, value, label, delay = 0, subtitle }: {
   icon: React.ComponentType<{ size?: number; className?: string }>;
-  value: string; label: string; delay?: number;
+  value: string; label: string; delay?: number; subtitle?: string;
 }) {
   return (
-    <div className="flex items-center gap-3 px-5 py-4 bg-navy-700/50 rounded-2xl border border-border-card animate-fade-up"
+    <div className="flex flex-col items-center gap-2 px-5 py-5 bg-navy-700/30 rounded-2xl border border-border-card animate-fade-up hover:scale-[1.02] transition-transform"
       style={{ animationDelay: `${delay}s` }}>
-      <div className="w-10 h-10 rounded-xl bg-accent-teal/10 flex items-center justify-center flex-shrink-0">
-        <Icon size={18} className="text-accent-teal" />
+      <div className="flex items-center gap-2 text-accent-teal">
+        <Icon size={18} />
+        <span className="text-[11px] font-semibold uppercase tracking-wider">{label}</span>
       </div>
-      <div>
-        <p className="text-xl font-black text-white leading-none">{value}</p>
-        <p className="text-[11px] text-text-secondary font-medium uppercase tracking-wider">{label}</p>
-      </div>
+      <p className="text-3xl sm:text-4xl font-black text-white leading-none">{value}</p>
+      {subtitle && (
+        <p className="text-[10px] text-text-muted -mt-1">{subtitle}</p>
+      )}
     </div>
   );
 }
@@ -295,8 +296,7 @@ function TodayMatches({ matches }: { matches: Match[] }) {
     <div className="card-dark p-5 animate-fade-up" style={{ animationDelay: '0.25s' }}>
       <div className="flex items-center gap-2 mb-4">
         {todayMatches.length > 0 && (
-          <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 text-[9px] font-bold uppercase animate-pulse">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+          <span className="badge badge-live text-[9px] animate-pulse">
             EN VIVO
           </span>
         )}
@@ -315,10 +315,8 @@ function TodayMatches({ matches }: { matches: Match[] }) {
 
           return (
             <div key={m.id}
-              className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
-                isLive ? 'bg-red-500/5 border border-red-500/10' :
-                isFinished ? 'bg-navy-700/30' :
-                'bg-navy-700/20'
+              className={`hd-card ${
+                isLive ? '!border-accent-red/30' : ''
               }`}
             >
               {/* Home team */}
@@ -439,7 +437,7 @@ export function DashboardPage() {
         {/* LEFT COLUMN */}
         <div className="space-y-4 sm:space-y-6">
           {/* Host Countries */}
-          <div className="card-dark p-5 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+          <div className="card p-5 animate-fade-up" style={{ animationDelay: '0.2s' }}>
             <h3 className="text-sm font-bold uppercase tracking-wider text-accent-teal mb-4">
               🇺🇸🇲🇽🇨🇦 PAÍSES ANFITRIONES
             </h3>
@@ -499,7 +497,7 @@ export function DashboardPage() {
         {/* RIGHT COLUMN */}
         <div className="space-y-4 sm:space-y-6">
           {/* Player Distribution */}
-          <div className="card-dark p-5 animate-fade-up" style={{ animationDelay: '0.25s' }}>
+          <div className="card p-5 animate-fade-up" style={{ animationDelay: '0.25s' }}>
             <h3 className="text-sm font-bold uppercase tracking-wider text-accent-teal mb-4">
               DISTRIBUCIÓN DE JUGADORES
             </h3>

@@ -3,13 +3,14 @@ import { useMatches } from '@/hooks/useQueries';
 import { Trophy } from 'lucide-react';
 import { useMemo } from 'react';
 import type { Match } from '@/types';
+import { PageWrapper, PageHeader, LoadingSpinner } from '@/components/ui/design-system';
 
 const KNOCKOUT_ROUNDS = [
-  { key: 'round_of_32', label: 'Dieciseisavos', slots: 16 },
-  { key: 'round_of_16', label: 'Octavos', slots: 8 },
-  { key: 'quarter_final', label: 'Cuartos', slots: 4 },
-  { key: 'semi_final', label: 'Semifinal', slots: 2 },
-  { key: 'final', label: 'Final', slots: 1 },
+  { key: 'round_of_32', label: 'Dieciseisavos', slots: 16, emoji: '🏟️' },
+  { key: 'round_of_16', label: 'Octavos', slots: 8, emoji: '⚔️' },
+  { key: 'quarter_final', label: 'Cuartos', slots: 4, emoji: '🔥' },
+  { key: 'semi_final', label: 'Semifinal', slots: 2, emoji: '🏆' },
+  { key: 'final', label: 'Final', slots: 1, emoji: '👑' },
 ];
 
 export function BracketPage() {
@@ -24,25 +25,18 @@ export function BracketPage() {
     return groups;
   }, [matches]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-accent-teal border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  if (isLoading) return <PageWrapper><LoadingSpinner /></PageWrapper>;
 
   return (
-    <div className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
-        <div className="flex items-center gap-3">
-          <Trophy size={28} className="text-accent-gold" />
-          <h1 className="text-2xl md:text-3xl font-black">Bracket Mundial</h1>
-        </div>
-        <p className="text-sm text-text-secondary">Fase eliminatoria · Del 28 de junio al 19 de julio</p>
-      </motion.div>
+    <PageWrapper>
+      <PageHeader
+        icon={Trophy}
+        title="Bracket Mundial"
+        subtitle="Fase eliminatoria · Del 28 de junio al 19 de julio"
+        iconColor="text-accent-gold"
+      />
 
-      <div className="space-y-6">
+      <div className="space-y-5">
         {KNOCKOUT_ROUNDS.map((round, ri) => {
           const roundMatches = knockout[round.key] || [];
           const placeholders = Array.from({ length: round.slots - roundMatches.length }, (_, i) => i);
@@ -50,26 +44,47 @@ export function BracketPage() {
           return (
             <motion.div
               key={round.key}
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: ri * 0.1 }}
-              className="card-dark p-5"
+              transition={{ delay: ri * 0.08 }}
+              className="card p-5 sm:p-6"
             >
-              <h2 className="text-sm font-bold uppercase tracking-wider text-accent-teal mb-4">{round.label}</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-accent-teal mb-4 flex items-center gap-2">
+                <span>{round.emoji}</span>
+                {round.label}
+                <span className="ml-auto text-xs font-normal text-text-muted">{roundMatches.length}/{round.slots}</span>
+              </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {roundMatches.map((m) => (
-                  <div key={m.id} className="bg-navy-700/30 rounded-xl p-3 border border-border-card">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-medium truncate flex-1">{m.home_team_name_en}</span>
-                      <span className="font-bold text-accent-teal mx-2">{m.home_score}-{m.away_score}</span>
-                      <span className="font-medium truncate flex-1 text-right">{m.away_team_name_en}</span>
+                {roundMatches.map((m) => {
+                  const hasScore = m.finished === 'TRUE' || (m.home_score !== 'null' && m.home_score !== '');
+                  return (
+                    <div key={m.id} className="hd-card">
+                      <div className="px-4 py-3 flex items-center justify-between gap-2">
+                        <div className="flex-1 min-w-0 text-right">
+                          <p className="text-xs font-semibold text-white truncate">{m.home_team_name_en}</p>
+                        </div>
+                        {hasScore ? (
+                          <span className="text-sm font-black text-accent-teal mx-2 flex-shrink-0">
+                            {m.home_score}-{m.away_score}
+                          </span>
+                        ) : (
+                          <span className="text-xs font-bold text-text-muted mx-2 flex-shrink-0">vs</span>
+                        )}
+                        <div className="flex-1 min-w-0 text-left">
+                          <p className="text-xs font-semibold text-white truncate">{m.away_team_name_en}</p>
+                        </div>
+                      </div>
+                      <div className="px-4 pb-3">
+                        <p className="text-[10px] text-text-muted text-center">{m.local_date}</p>
+                      </div>
                     </div>
-                    <p className="text-[9px] text-text-muted text-center mt-1">{m.local_date}</p>
-                  </div>
-                ))}
+                  );
+                })}
                 {placeholders.map((i) => (
-                  <div key={`ph-${i}`} className="bg-navy-700/20 rounded-xl p-3 border border-dashed border-border-card flex items-center justify-center">
-                    <span className="text-xs text-text-muted">Por definir</span>
+                  <div key={`ph-${i}`}
+                    className="hd-card border-dashed flex items-center justify-center"
+                    style={{ minHeight: '80px' }}>
+                    <span className="text-xs text-text-dim">Por definir</span>
                   </div>
                 ))}
               </div>
@@ -77,6 +92,6 @@ export function BracketPage() {
           );
         })}
       </div>
-    </div>
+    </PageWrapper>
   );
 }

@@ -3,6 +3,7 @@ import { useStadiums } from '@/hooks/useQueries';
 import { Building2, MapPin, Users, X, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 import { useState } from 'react';
 import type { Stadium } from '@/types';
+import { PageWrapper, PageHeader, LoadingSpinner } from '@/components/ui/design-system';
 
 // ─── Image mapping ───
 const STADIUM_IMAGES: Record<string, string[]> = {
@@ -192,45 +193,38 @@ export function StadiumsPage() {
   const { data: stadiums, isLoading } = useStadiums();
   const [selectedStadium, setSelectedStadium] = useState<Stadium | null>(null);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-accent-teal border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  if (isLoading) return <PageWrapper><LoadingSpinner /></PageWrapper>;
 
   const hostCountries = [
-    { name: 'Estados Unidos', stadiums: stadiums?.filter((s) => s.country_en === 'USA') ?? [], color: '#3B82F6' },
-    { name: 'México', stadiums: stadiums?.filter((s) => s.country_en === 'Mexico') ?? [], color: '#F59E0B' },
-    { name: 'Canadá', stadiums: stadiums?.filter((s) => s.country_en === 'Canada') ?? [], color: '#EF4444' },
+    { name: 'Estados Unidos', stadiums: stadiums?.filter((s) => s.country_en === 'USA') ?? [], color: '#3B82F6', emoji: '🇺🇸' },
+    { name: 'México', stadiums: stadiums?.filter((s) => s.country_en === 'Mexico') ?? [], color: '#F59E0B', emoji: '🇲🇽' },
+    { name: 'Canadá', stadiums: stadiums?.filter((s) => s.country_en === 'Canada') ?? [], color: '#EF4444', emoji: '🇨🇦' },
   ];
 
   return (
-    <div className="p-5 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
-      {/* Header */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1 sm:space-y-2">
-        <div className="flex items-center gap-3">
-          <Building2 size={26} className="text-accent-teal" />
-          <h1 className="text-2xl sm:text-3xl font-bold text-white">Estadios</h1>
-        </div>
-        <p className="text-xs sm:text-sm text-text-secondary">16 estadios en 3 países — Copa Mundial 2026</p>
-      </motion.div>
+    <PageWrapper>
+      <PageHeader
+        icon={Building2}
+        title="Estadios"
+        subtitle={`${stadiums?.length || 16} estadios en 3 países — Copa Mundial 2026`}
+      />
 
       {/* Host country stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-        {hostCountries.map(({ name, stadiums: cs, color }) => (
+        {hostCountries.map(({ name, stadiums: cs, color, emoji }) => (
           <motion.div
             key={name}
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.02 }}
-            className="rounded-2xl p-5"
+            className="card p-5"
             style={{
               background: `linear-gradient(135deg, ${color}10, ${color}05)`,
-              border: `1px solid ${color}20`,
+              borderColor: `${color}20`,
             }}
           >
-            <h3 className="text-base font-bold mb-1" style={{ color }}>{name}</h3>
+            <h3 className="text-base font-bold mb-1 flex items-center gap-2" style={{ color }}>
+              <span>{emoji}</span> {name}
+            </h3>
             <div className="flex items-center gap-3 text-sm text-text-secondary">
               <span className="flex items-center gap-1"><Building2 size={14} /> {cs.length} sedes</span>
               <span className="flex items-center gap-1"><Users size={14} /> {cs.reduce((s, x) => s + Number(x.capacity || 0), 0).toLocaleString()} cap.</span>
@@ -257,6 +251,6 @@ export function StadiumsPage() {
           <StadiumGallery stadium={selectedStadium} onClose={() => setSelectedStadium(null)} />
         )}
       </AnimatePresence>
-    </div>
+    </PageWrapper>
   );
 }

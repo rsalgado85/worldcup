@@ -19,14 +19,12 @@ export function AppLayout() {
   const location = useLocation();
   const isDark = theme === 'dark';
 
-  // Apply theme class
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'light') root.classList.add('light');
     else root.classList.remove('light');
   }, [theme]);
 
-  // Scroll to top on route change
   useEffect(() => {
     document.querySelector('main')?.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
@@ -37,66 +35,33 @@ export function AppLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden" style={bgStyle}>
-      {/* Desktop Sidebar */}
       <DesktopSidebar />
-
-      {/* Mobile Sidebar — uses store's sidebarOpen, handles its own overlay internally */}
       <Sidebar />
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Title Bar (HyruleDex style) */}
-        <header
-          className="lg:hidden flex items-center justify-between px-3 py-3 flex-shrink-0"
-          style={{
-            borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.06)'}`,
-            backgroundColor: isDark ? 'transparent' : 'rgba(255,255,255,0.8)',
-            backdropFilter: isDark ? 'none' : 'blur(12px)',
-          }}
-        >
-          <button
-            onClick={toggleSidebar}
-            className="p-2 rounded-lg transition-colors active:scale-95"
-            style={{ color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)' }}
-            aria-label="Open menu"
-          >
-            <Menu size={22} />
-          </button>
-          <div className="flex items-center gap-2">
-            <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center p-0.5"
-              style={{ background: `linear-gradient(135deg, #F5A623, #14B8A6)`, boxShadow: '0 0 12px rgba(20,184,166,0.15)' }}
-            >
-              <img src="/images/fifa-2026-logo.png" alt="FIFA" className="w-full h-full object-contain" />
-            </div>
-            <span className="text-sm font-black tracking-tight" style={{ color: isDark ? '#ffffff' : '#1A1510' }}>
-              WORLD<span style={{ color: '#14B8A6' }}>CUP</span> 2026
-            </span>
-          </div>
-          <div className="w-9" />
-        </header>
+        {/* Mobile Header — HyruleDex style */}
+        <MobileHeader />
 
-        {/* Page Content */}
         <main className="flex-1 overflow-y-auto">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
           >
             <Outlet />
           </motion.div>
         </main>
 
-        {/* Mobile Bottom Nav */}
+        {/* Mobile Bottom Nav — HyruleDex style */}
         <MobileBottomNav />
 
-        {/* Footer (desktop only) */}
+        {/* Footer (desktop) */}
         <footer
           className="hidden lg:block py-3 px-4 text-center flex-shrink-0"
           style={{ borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}` }}
         >
-          <p className="text-[10px]" style={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' }}>
+          <p className="text-[10px]" style={{ color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)' }}>
             &copy; {new Date().getFullYear()} WorldCup Insight — FIFA World Cup 2026&trade;
           </p>
         </footer>
@@ -105,7 +70,51 @@ export function AppLayout() {
   );
 }
 
-// ─── Mobile Bottom Nav ───
+// ─── Mobile Header (HyruleDex style) ───
+function MobileHeader() {
+  const { theme, toggleSidebar } = useAppStore();
+  const isDark = theme === 'dark';
+
+  return (
+    <header
+      className="lg:hidden flex items-center justify-between px-4 py-3 flex-shrink-0"
+      style={{
+        borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)'}`,
+        backgroundColor: isDark ? 'rgba(6,11,21,0.95)' : 'rgba(255,255,255,0.9)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+      }}
+    >
+      <button
+        onClick={toggleSidebar}
+        className="p-2 -ml-1 rounded-lg transition-colors active:scale-95"
+        style={{ color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)' }}
+        aria-label="Menu"
+      >
+        <Menu size={20} />
+      </button>
+
+      <div className="flex items-center gap-2">
+        <div
+          className="w-7 h-7 rounded-lg flex items-center justify-center p-0.5"
+          style={{
+            background: 'linear-gradient(135deg, #F5A623, #14B8A6)',
+            boxShadow: '0 0 10px rgba(20,184,166,0.12)',
+          }}
+        >
+          <img src="/images/fifa-2026-logo.png" alt="FIFA" className="w-full h-full object-contain" />
+        </div>
+        <span className="text-sm font-black tracking-tight" style={{ color: isDark ? '#ffffff' : '#1A1510' }}>
+          WORLD<span style={{ color: '#14B8A6' }}>CUP</span> 2026
+        </span>
+      </div>
+
+      <div className="w-8" />
+    </header>
+  );
+}
+
+// ─── Mobile Bottom Nav (HyruleDex style) ───
 function MobileBottomNav() {
   const { theme, language } = useAppStore();
   const isDark = theme === 'dark';
@@ -114,7 +123,7 @@ function MobileBottomNav() {
 
   return (
     <nav
-      className="lg:hidden flex items-center justify-around px-1 py-1 flex-shrink-0"
+      className="lg:hidden flex items-center justify-around px-1 py-2 flex-shrink-0"
       style={{
         backgroundColor: isDark ? 'rgba(6, 11, 21, 0.97)' : 'rgba(255, 255, 255, 0.97)',
         borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
@@ -129,16 +138,22 @@ function MobileBottomNav() {
           ? location.pathname === '/' || location.pathname === '/resumen'
           : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
         const label = language === 'es' ? item.labelEs : item.labelEn;
+
         return (
           <button
             key={item.path}
             onClick={() => navigate(item.path)}
-            className="flex flex-col items-center gap-0.5 py-1 px-1.5 min-w-0 transition-all active:scale-90"
-            style={{ color: isActive ? '#14B8A6' : isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)' }}
+            className="flex flex-col items-center gap-0.5 py-1.5 px-2 min-w-0 transition-all active:scale-90 rounded-xl"
+            style={{ color: isActive ? '#14B8A6' : isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }}
             aria-label={label}
           >
-            <Icon size={18} />
-            <span className="text-[8px] font-semibold truncate max-w-full">{label}</span>
+            <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+            <span
+              className="text-[9px] font-semibold truncate max-w-full"
+              style={{ opacity: isActive ? 1 : 0.7 }}
+            >
+              {label}
+            </span>
           </button>
         );
       })}
