@@ -92,14 +92,14 @@ function SidebarContent({ collapsed, onClose }: { collapsed: boolean; onClose?: 
       </div>
 
       {/* Nav Items */}
-      <nav className="flex-1 px-5 py-5 space-y-1.5 overflow-y-auto">
+      <nav className="flex-1 px-5 py-6 space-y-3 overflow-y-auto">
         {allItems.map((item) => (
           <SidebarNavItem key={item.path} item={item} collapsed={collapsed} onClose={onClose} />
         ))}
       </nav>
 
       {/* Bottom Controls */}
-      <div className="flex-shrink-0 px-5 py-4 space-y-2 border-t border-white/5">
+      <div className="flex-shrink-0 px-5 py-5 space-y-3 border-t border-white/5">
         <BottomBtn onClick={toggleSidebarCollapsed} icon={collapsed ? ChevronRight : ChevronLeft} label="Colapsar" collapsed={collapsed} />
         <BottomBtn onClick={toggleTheme} icon={theme === 'dark' ? Sun : Moon} label={theme === 'dark' ? 'Claro' : 'Oscuro'} collapsed={collapsed} />
         <BottomBtn onClick={toggleLanguage} icon={Languages} label={language === 'es' ? 'English' : 'Español'} collapsed={collapsed} />
@@ -130,7 +130,7 @@ function SidebarNavItem({
       end={item.path === '/resumen'}
       onClick={onClose}
       className={`
-        flex items-center gap-4 px-4 py-3 rounded-full transition-all duration-200
+        flex items-center gap-4 px-4 py-3.5 rounded-full transition-all duration-200
         ${isActive
           ? 'bg-gradient-to-r from-[rgba(120,140,60,0.25)] to-[rgba(100,130,50,0.12)] text-white font-semibold'
           : 'text-[#AAAAAA] font-normal hover:text-white/70'
@@ -169,7 +169,7 @@ function BottomBtn({
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-4 px-4 py-2.5 rounded-full transition-all duration-150 text-[#AAAAAA] hover:text-white/70 hover:bg-white/[0.03]"
+      className="w-full flex items-center gap-4 px-4 py-3 rounded-full transition-all duration-150 text-[#AAAAAA] hover:text-white/70 hover:bg-white/[0.03]"
     >
       <div className="flex items-center justify-center w-6 h-6 flex-shrink-0">
         <Icon size={20} />
