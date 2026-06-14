@@ -27,7 +27,7 @@ export function BracketPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-neon-green border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-accent-teal border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -36,7 +36,7 @@ export function BracketPage() {
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
         <div className="flex items-center gap-3">
-          <Trophy size={28} className="text-neon-gold" />
+          <Trophy size={28} className="text-accent-gold" />
           <h1 className="text-2xl md:text-3xl font-black">Bracket Mundial</h1>
         </div>
         <p className="text-sm text-text-secondary">Fase eliminatoria · Del 28 de junio al 19 de julio</p>
@@ -53,22 +53,22 @@ export function BracketPage() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: ri * 0.1 }}
-              className="glass rounded-2xl p-5"
+              className="card-dark p-5"
             >
-              <h2 className="text-sm font-bold uppercase tracking-wider text-neon-green mb-4">{round.label}</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-accent-teal mb-4">{round.label}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {roundMatches.map((m) => (
-                  <div key={m.id} className="bg-white/3 rounded-xl p-3 border border-border-subtle">
+                  <div key={m.id} className="bg-navy-700/30 rounded-xl p-3 border border-border-card">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-medium truncate flex-1">{m.home_team_name_en}</span>
-                      <span className="font-bold text-neon-green mx-2">{m.home_score}-{m.away_score}</span>
+                      <span className="font-bold text-accent-teal mx-2">{m.home_score}-{m.away_score}</span>
                       <span className="font-medium truncate flex-1 text-right">{m.away_team_name_en}</span>
                     </div>
                     <p className="text-[9px] text-text-muted text-center mt-1">{m.local_date}</p>
                   </div>
                 ))}
                 {placeholders.map((i) => (
-                  <div key={`ph-${i}`} className="bg-white/2 rounded-xl p-3 border border-dashed border-border-subtle flex items-center justify-center">
+                  <div key={`ph-${i}`} className="bg-navy-700/20 rounded-xl p-3 border border-dashed border-border-card flex items-center justify-center">
                     <span className="text-xs text-text-muted">Por definir</span>
                   </div>
                 ))}

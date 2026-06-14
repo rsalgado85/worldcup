@@ -1,28 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  LayoutDashboard,
-  Users,
-  UserRound,
-  Swords,
-  Building2,
-  Trophy,
-  BarChart3,
-  Brain,
-  X,
-  Globe,
-} from 'lucide-react';
+import { Trophy, Home, BarChart3, UserRound, X } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 
 const navItems = [
-  { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/teams', label: 'Equipos', icon: Users },
-  { path: '/players', label: 'Jugadores', icon: UserRound },
-  { path: '/matches', label: 'Partidos', icon: Swords },
-  { path: '/stadiums', label: 'Estadios', icon: Building2 },
-  { path: '/bracket', label: 'Bracket', icon: Trophy },
-  { path: '/rankings', label: 'Rankings', icon: BarChart3 },
-  { path: '/predictions', label: 'Predicciones', icon: Brain },
+  { path: '/', label: 'INICIO', icon: Home },
+  { path: '/resumen', label: 'RESUMEN', icon: BarChart3 },
+  { path: '/top-jugadores', label: 'TOP JUGADORES', icon: UserRound },
 ];
 
 export function Sidebar() {
@@ -36,45 +20,17 @@ export function Sidebar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-black/70 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
           <motion.aside
-            initial={{ x: -300 }}
+            initial={{ x: -260 }}
             animate={{ x: 0 }}
-            exit={{ x: -300 }}
+            exit={{ x: -260 }}
             transition={{ type: 'spring', damping: 25 }}
-            className="fixed top-0 left-0 z-50 h-full w-64 glass-strong border-r border-border-subtle flex flex-col"
+            className="fixed top-0 left-0 z-50 h-full w-[220px] bg-navy-800 border-r border-border-card flex flex-col lg:hidden"
           >
-            <div className="flex items-center justify-between p-5 border-b border-border-subtle">
-              <div className="flex items-center gap-2">
-                <Globe size={24} className="text-neon-green" />
-                <span className="font-black text-lg neon-text-green tracking-tight">WC26</span>
-              </div>
-              <button onClick={() => setSidebarOpen(false)} className="p-1 rounded-lg hover:bg-white/5">
-                <X size={18} />
-              </button>
-            </div>
-            <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  end={item.path === '/'}
-                  onClick={() => setSidebarOpen(false)}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      isActive
-                        ? 'bg-neon-green/10 text-neon-green neon-border'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
-                    }`
-                  }
-                >
-                  <item.icon size={18} />
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
+            <SidebarContent onClose={() => setSidebarOpen(false)} />
           </motion.aside>
         </>
       )}
@@ -82,36 +38,55 @@ export function Sidebar() {
   );
 }
 
-// Desktop sidebar (always visible)
 export function DesktopSidebar() {
   return (
-    <aside className="hidden lg:flex flex-col w-64 h-full glass-strong border-r border-border-subtle flex-shrink-0">
-      <div className="flex items-center gap-2 p-5 border-b border-border-subtle">
-        <Globe size={24} className="text-neon-green" />
-        <span className="font-black text-lg neon-text-green tracking-tight">WC26</span>
+    <aside className="hidden lg:flex flex-col w-[220px] h-full bg-navy-800 border-r border-border-card flex-shrink-0">
+      <SidebarContent />
+    </aside>
+  );
+}
+
+function SidebarContent({ onClose }: { onClose?: () => void }) {
+  return (
+    <>
+      {/* Header with Trophy */}
+      <div className="flex flex-col items-center pt-6 pb-5 px-4 border-b border-border-card">
+        <div className="w-12 h-12 rounded-full bg-navy-600 flex items-center justify-center mb-3">
+          <Trophy size={24} className="text-accent-gold" />
+        </div>
+        <p className="text-[10px] font-bold tracking-[0.2em] text-text-secondary text-center leading-tight">
+          COPA<br />MUNDIAL<br />2026
+        </p>
       </div>
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+
+      {/* Navigation */}
+      <nav className="flex-1 py-4 px-2 space-y-1">
         {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             end={item.path === '/'}
+            onClick={onClose}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+              `flex items-center gap-3 px-4 py-3 rounded-xl text-[11px] font-semibold tracking-wider transition-all duration-200 ${
                 isActive
-                  ? 'bg-neon-green/10 text-neon-green neon-border'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
+                  ? 'bg-accent-teal/10 text-accent-teal border-l-[3px] border-accent-teal'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-white/[0.03] border-l-[3px] border-transparent'
               }`
             }
           >
-            <item.icon size={18} />
+            <item.icon size={16} />
             {item.label}
           </NavLink>
         ))}
       </nav>
-      <div className="p-4 border-t border-border-subtle">
-        <p className="text-[10px] text-text-muted text-center">Copa Mundial FIFA 2026™</p>
+
+      {/* Footer */}
+      <div className="p-3 border-t border-border-card">
+        <p className="text-[9px] text-text-muted text-center uppercase tracking-widest">
+          FIFA World Cup 26™
+        </p>
       </div>
-    </aside>
+    </>
   );
 }

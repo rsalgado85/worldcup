@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { DashboardPage } from '@/pages/DashboardPage';
@@ -25,7 +25,9 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/" element={<Navigate to="/resumen" replace />} />
+            <Route path="/resumen" element={<DashboardPage />} />
+            <Route path="/top-jugadores" element={<PlayersPage />} />
             <Route path="/teams" element={<TeamsPage />} />
             <Route path="/players" element={<PlayersPage />} />
             <Route path="/matches" element={<MatchesPage />} />

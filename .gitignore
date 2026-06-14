@@ -29,3 +29,4 @@ project-hyruledex/
 project-worldcup/
 project-crane-app/
 .vercel
+.env

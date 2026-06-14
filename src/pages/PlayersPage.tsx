@@ -68,12 +68,12 @@ function PlayerDetailModal({
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-        className="glass-strong rounded-2xl p-6 max-w-md w-full border border-neon-green/20"
+        className="card-dark p-6 max-w-md w-full border border-accent-teal/20"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center mb-6">
-          <div className="w-20 h-20 mx-auto rounded-full bg-neon-green/10 border-2 border-neon-green/30 flex items-center justify-center mb-3">
-            <UserRound size={40} className="text-neon-green/60" />
+          <div className="w-20 h-20 mx-auto rounded-full bg-accent-teal/10 border-2 border-accent-teal/30 flex items-center justify-center mb-3">
+            <UserRound size={40} className="text-accent-teal/60" />
           </div>
           <h2 className="text-xl font-black neon-text-green">{player.name}</h2>
           <div className="flex items-center justify-center gap-2 mt-1">
@@ -84,25 +84,25 @@ function PlayerDetailModal({
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="glass rounded-xl p-4 text-center">
-            <Trophy size={20} className="mx-auto mb-1 text-neon-gold" />
+          <div className="card-dark p-4 text-center">
+            <Trophy size={20} className="mx-auto mb-1 text-accent-gold" />
             <p className="text-2xl font-black neon-text-green">{player.goals}</p>
             <p className="text-[10px] text-text-muted uppercase">Goles</p>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
-            <Target size={20} className="mx-auto mb-1 text-neon-orange" />
+          <div className="card-dark p-4 text-center">
+            <Target size={20} className="mx-auto mb-1 text-accent-orange" />
             <p className="text-2xl font-black neon-text-green">{player.matches}</p>
             <p className="text-[10px] text-text-muted uppercase">Partidos</p>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
-            <Zap size={20} className="mx-auto mb-1 text-neon-blue" />
+          <div className="card-dark p-4 text-center">
+            <Zap size={20} className="mx-auto mb-1 text-accent-teal" />
             <p className="text-2xl font-black neon-text-green">
               {player.matches > 0 ? (player.goals / player.matches).toFixed(1) : '0'}
             </p>
             <p className="text-[10px] text-text-muted uppercase">Goles/partido</p>
           </div>
-          <div className="glass rounded-xl p-4 text-center">
-            <Flame size={20} className="mx-auto mb-1 text-neon-pink" />
+          <div className="card-dark p-4 text-center">
+            <Flame size={20} className="mx-auto mb-1 text-accent-teal" />
             <p className="text-2xl font-black neon-text-green">{player.minutes.length}</p>
             <p className="text-[10px] text-text-muted uppercase">Minutos</p>
           </div>
@@ -113,7 +113,7 @@ function PlayerDetailModal({
             <h3 className="text-xs font-bold uppercase tracking-wider text-text-muted mb-2">Minutos de gol</h3>
             <div className="flex flex-wrap gap-2">
               {player.minutes.map((m, i) => (
-                <span key={i} className="px-2 py-1 rounded-lg text-xs font-mono bg-neon-green/10 text-neon-green">
+                <span key={i} className="px-2 py-1 rounded-lg text-xs font-mono bg-accent-teal/10 text-accent-teal">
                   {m}'
                 </span>
               ))}
@@ -130,7 +130,7 @@ function PlayerCard({ player, rank, onClick }: { player: ScorerData; rank: numbe
     <motion.div
       whileHover={{ scale: 1.02 }}
       onClick={onClick}
-      className="glass rounded-xl p-4 border border-border-subtle hover:border-neon-green/20 cursor-pointer transition-all"
+      className="card-dark p-4 border border-border-card hover:border-accent-teal/20 cursor-pointer transition-all"
     >
       <div className="flex items-center gap-3">
         <span className={`text-lg font-black w-8 ${
@@ -138,8 +138,8 @@ function PlayerCard({ player, rank, onClick }: { player: ScorerData; rank: numbe
         }`}>
           {rank <= 3 ? ['🥇', '🥈', '🥉'][rank - 1] : `#${rank}`}
         </span>
-        <div className="w-10 h-10 rounded-full bg-neon-green/10 flex items-center justify-center flex-shrink-0">
-          <UserRound size={20} className="text-neon-green" />
+        <div className="w-10 h-10 rounded-full bg-accent-teal/10 flex items-center justify-center flex-shrink-0">
+          <UserRound size={20} className="text-accent-teal" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-bold truncate">{player.name}</p>
@@ -242,7 +242,7 @@ export function PlayersPage() {
   if (mLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-neon-green border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-accent-teal border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -252,7 +252,7 @@ export function PlayersPage() {
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
         <div className="flex items-center gap-3">
-          <UserRound size={28} className="text-neon-blue" />
+          <UserRound size={28} className="text-accent-teal" />
           <h1 className="text-2xl md:text-3xl font-black">Jugadores</h1>
         </div>
         <p className="text-sm text-text-secondary">{players.length} goleadores · {totalGoals} goles en el torneo</p>
@@ -271,7 +271,7 @@ export function PlayersPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="glass rounded-xl p-4 text-center"
+            className="card-dark p-4 text-center"
           >
             <stat.icon size={20} className="mx-auto mb-2" />
             <p className="text-2xl font-black neon-text-green">{stat.value}</p>
@@ -289,12 +289,12 @@ export function PlayersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar jugador o equipo..."
-            className="w-full bg-white/5 border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-sm text-text-primary focus:outline-none focus:border-neon-green/30 transition-colors"
+            className="w-full bg-navy-700/50 border border-border-card rounded-xl py-2.5 pl-10 pr-4 text-sm text-text-primary focus:outline-none focus:border-accent-teal/30 transition-colors"
           />
         </div>
         <button
           onClick={() => setSortBy(sortBy === 'goals' ? 'name' : 'goals')}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold bg-white/5 border border-border-subtle text-text-secondary hover:bg-white/8 transition-all"
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold bg-navy-700/50 border border-border-card text-text-secondary hover:bg-navy-600/50 transition-all"
         >
           {sortBy === 'goals' ? '🔥 Por goles' : '🔤 Alfabético'}
         </button>

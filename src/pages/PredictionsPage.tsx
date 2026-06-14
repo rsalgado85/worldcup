@@ -19,25 +19,25 @@ function GroupPrediction({ group, teams }: { group: Group; teams: Map<string, Te
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
-      className="glass rounded-xl p-4 border border-border-subtle"
+      className="card-dark p-4 border border-border-card"
     >
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between"
       >
-        <h3 className="text-sm font-bold uppercase tracking-wider text-neon-green">Grupo {group.name}</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-accent-teal">Grupo {group.name}</h3>
         {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </button>
 
       <div className="mt-4 space-y-2">
         {sorted.slice(0, 2).map((t, i) => (
           <div key={t.team_id} className="flex items-center gap-2 p-2 rounded-lg bg-neon-green/5">
-            <span className="text-[10px] font-bold text-neon-green">#{i + 1}</span>
+            <span className="text-[10px] font-bold text-accent-teal">#{i + 1}</span>
             {getFlag(t.team_id) && (
               <img src={getFlag(t.team_id)} alt="" className="w-5 h-3.5 rounded" />
             )}
             <span className="text-xs font-semibold flex-1">{getTeamName(t.team_id)}</span>
-            <span className="text-[10px] font-bold text-neon-green">{t.pts} pts</span>
+            <span className="text-[10px] font-bold text-accent-teal">{t.pts} pts</span>
           </div>
         ))}
       </div>
@@ -50,7 +50,7 @@ function GroupPrediction({ group, teams }: { group: Group; teams: Map<string, Te
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="mt-3 pt-3 border-t border-border-subtle space-y-1.5">
+            <div className="mt-3 pt-3 border-t border-border-card space-y-1.5">
               {sorted.map((t, i) => (
                 <div key={t.team_id} className="flex items-center gap-2 text-[10px]">
                   <span className="w-4 text-text-muted">{i + 1}</span>
@@ -59,7 +59,7 @@ function GroupPrediction({ group, teams }: { group: Group; teams: Map<string, Te
                   <span className="text-text-secondary">G:{t.w}</span>
                   <span className="text-text-secondary">E:{t.d}</span>
                   <span className="text-text-secondary">P:{t.l}</span>
-                  <span className="font-bold text-neon-green">{t.pts}</span>
+                  <span className="font-bold text-accent-teal">{t.pts}</span>
                 </div>
               ))}
             </div>
@@ -96,7 +96,7 @@ export function PredictionsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-neon-green border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-accent-teal border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -105,7 +105,7 @@ export function PredictionsPage() {
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
         <div className="flex items-center gap-3">
-          <Brain size={28} className="text-neon-pink" />
+          <Brain size={28} className="text-accent-teal" />
           <h1 className="text-2xl md:text-3xl font-black">Predicciones</h1>
         </div>
         <p className="text-sm text-text-secondary">Proyecciones de clasificación basadas en los resultados actuales</p>
@@ -124,7 +124,7 @@ export function PredictionsPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="glass rounded-xl p-4 text-center"
+              className="card-dark p-4 text-center"
             >
               <s.icon size={20} className="mx-auto mb-2" />
               <p className="text-2xl font-black neon-text-green">{s.value}</p>
@@ -150,7 +150,7 @@ export function PredictionsPage() {
 
       {!groups?.length && (
         <div className="text-center py-20">
-          <Brain size={48} className="mx-auto mb-4 text-neon-pink/30" />
+          <Brain size={48} className="mx-auto mb-4 text-accent-teal/30" />
           <p className="text-sm text-text-muted">Cargando datos de grupos...</p>
         </div>
       )}

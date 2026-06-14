@@ -11,7 +11,7 @@ function MatchCard({ match }: { match: Match }) {
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
-      className="glass rounded-xl p-4 border border-border-subtle hover:border-neon-green/20 transition-all"
+      className="card-dark p-4 border border-border-card hover:border-accent-teal/20 transition-all"
     >
       <div className="flex items-center justify-between mb-3">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">
@@ -21,8 +21,8 @@ function MatchCard({ match }: { match: Match }) {
           isFinished
             ? 'bg-text-muted/10 text-text-muted'
             : isLive
-            ? 'bg-neon-green/15 text-neon-green animate-pulse'
-            : 'bg-neon-blue/10 text-neon-blue'
+            ? 'bg-accent-teal/15 text-accent-teal animate-pulse'
+            : 'bg-accent-teal/10 text-accent-teal'
         }`}>
           {isFinished ? 'FINAL' : isLive ? 'LIVE' : 'PRÓXIMO'}
         </span>
@@ -81,7 +81,7 @@ export function MatchesPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-neon-green border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-accent-teal border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -90,7 +90,7 @@ export function MatchesPage() {
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
         <div className="flex items-center gap-3">
-          <Swords size={28} className="text-neon-orange" />
+          <Swords size={28} className="text-accent-orange" />
           <h1 className="text-2xl md:text-3xl font-black">Centro de Partidos</h1>
         </div>
         <p className="text-sm text-text-secondary">104 partidos · Scores en vivo vía worldcup26.ir</p>
@@ -109,8 +109,8 @@ export function MatchesPage() {
             onClick={() => setFilter(key as typeof filter)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
               filter === key
-                ? 'bg-neon-green/15 text-neon-green neon-border'
-                : 'bg-white/3 text-text-secondary hover:bg-white/5'
+                ? 'bg-accent-teal/15 text-accent-teal border border-accent-teal/20'
+                : 'bg-navy-700/30 text-text-secondary hover:bg-navy-700/50'
             }`}
           >
             <Icon size={14} />
@@ -124,7 +124,7 @@ export function MatchesPage() {
         {filter === 'all' ? (
           grouped.map(([group, groupMatches]) => (
             <div key={group}>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-neon-green mb-3">Grupo {group}</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-accent-teal mb-3">Grupo {group}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {groupMatches.map((m) => (
                   <MatchCard key={m.id} match={m} />

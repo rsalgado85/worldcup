@@ -39,7 +39,7 @@ export function RankingsPage() {
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
         <div className="flex items-center gap-3">
-          <BarChart3 size={28} className="text-neon-orange" />
+          <BarChart3 size={28} className="text-accent-orange" />
           <h1 className="text-2xl md:text-3xl font-black">Rankings</h1>
         </div>
         <p className="text-sm text-text-secondary">Goleadores, asistencias y más</p>
@@ -50,21 +50,21 @@ export function RankingsPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-2xl p-5"
+          className="card-dark p-5"
         >
           <div className="flex items-center gap-2 mb-4">
-            <Trophy size={18} className="text-neon-gold" />
+            <Trophy size={18} className="text-accent-gold" />
             <h2 className="text-sm font-bold uppercase tracking-wider">Goleadores</h2>
           </div>
           <div className="space-y-2">
             {topScorers.map(([name, goals], i) => (
-              <div key={name} className="flex items-center justify-between p-3 rounded-xl bg-white/2">
+              <div key={name} className="flex items-center justify-between p-3 rounded-xl bg-navy-700/20">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-bold text-neon-green w-6">{i + 1}</span>
+                  <span className="text-xs font-bold text-accent-teal w-6">{i + 1}</span>
                   <span className="text-sm font-medium">{name}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Target size={14} className="text-neon-orange" />
+                  <Target size={14} className="text-accent-orange" />
                   <span className="text-sm font-bold neon-text-green">{goals}</span>
                 </div>
               </div>
@@ -77,15 +77,15 @@ export function RankingsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass rounded-2xl p-5"
+          className="card-dark p-5"
         >
           <div className="flex items-center gap-2 mb-4">
-            <Shield size={18} className="text-neon-blue" />
+            <Shield size={18} className="text-accent-teal" />
             <h2 className="text-sm font-bold uppercase tracking-wider">Equipos participantes</h2>
           </div>
           <div className="space-y-2 max-h-[400px] overflow-y-auto">
             {teams?.slice(0, 48).map((team, i) => (
-              <div key={team.id} className="flex items-center justify-between p-3 rounded-xl bg-white/2">
+              <div key={team.id} className="flex items-center justify-between p-3 rounded-xl bg-navy-700/20">
                 <div className="flex items-center gap-3">
                   <span className="text-xs font-bold text-text-muted w-6">{i + 1}</span>
                   <img src={team.flag} alt="" className="w-8 h-5 rounded object-cover" />

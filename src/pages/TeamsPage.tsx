@@ -23,7 +23,7 @@ export function TeamsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-2 border-neon-green border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-accent-teal border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -32,7 +32,7 @@ export function TeamsPage() {
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
         <div className="flex items-center gap-3">
-          <Users size={28} className="text-neon-green" />
+          <Users size={28} className="text-accent-teal" />
           <h1 className="text-2xl md:text-3xl font-black">Equipos</h1>
         </div>
         <p className="text-sm text-text-secondary">48 selecciones nacionales · 12 grupos</p>
@@ -46,7 +46,7 @@ export function TeamsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar equipo..."
-          className="w-full bg-white/5 border border-border-subtle rounded-xl py-2.5 pl-10 pr-4 text-sm text-text-primary focus:outline-none focus:border-neon-green/30 transition-colors"
+          className="w-full bg-navy-700/50 border border-border-card rounded-xl py-2.5 pl-10 pr-4 text-sm text-text-primary focus:outline-none focus:border-accent-teal/30 transition-colors"
         />
       </div>
 
@@ -65,7 +65,7 @@ export function TeamsPage() {
             transition={{ delay: i * 0.02 }}
             whileHover={{ y: -4, scale: 1.03 }}
             onClick={() => navigate(`/teams/${team.id}`)}
-            className="glass rounded-xl p-4 text-center cursor-pointer transition-all"
+            className="card-dark p-4 text-center cursor-pointer transition-all"
           >
             <img
               src={team.flag}
