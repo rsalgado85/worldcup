@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# External projects
+project-fifa/
+project-hyruledex/
+project-worldcup/
+project-crane-app/
