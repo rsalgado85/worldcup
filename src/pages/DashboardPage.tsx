@@ -341,7 +341,7 @@ export function DashboardPage() {
   const totalMatches = matches?.length ?? 104;
 
   return (
-    <div className="p-5 md:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-6 pb-20 relative">
+    <div className="p-5 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-4 sm:space-y-6 lg:space-y-8 pb-20 relative">
 
       {/* ═══ HEADER: Trophy + Title ═══ */}
       <div className="relative flex flex-col items-center pt-4 pb-2">
@@ -363,7 +363,7 @@ export function DashboardPage() {
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight text-center animate-fade-up"
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight text-center animate-fade-up"
           style={{ animationDelay: '0.1s' }}>
           COPA MUNDIAL <span className="text-accent-teal">2026</span>
         </h1>
@@ -374,7 +374,7 @@ export function DashboardPage() {
       </div>
 
       {/* ═══ STATS BAR ═══ */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         <StatBadge icon={Users} value={String(totalTeams)} label="EQUIPOS" delay={0.2} />
         <StatBadge icon={MapPin} value={String(totalStadiums)} label="ESTADIOS" delay={0.25} />
         <StatBadge icon={Swords} value={String(totalMatches)} label="PARTIDOS" delay={0.3} />
@@ -386,10 +386,10 @@ export function DashboardPage() {
       <TodayMatches matches={matches ?? []} />
 
       {/* ═══ MAIN GRID: 2 Columns ═══ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
 
         {/* LEFT COLUMN */}
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-6">
           {/* Host Countries */}
           <div className="card-dark p-5 animate-fade-up" style={{ animationDelay: '0.2s' }}>
             <h3 className="text-sm font-bold uppercase tracking-wider text-accent-teal mb-4">
@@ -449,7 +449,7 @@ export function DashboardPage() {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-6">
           {/* Player Distribution */}
           <div className="card-dark p-5 animate-fade-up" style={{ animationDelay: '0.25s' }}>
             <h3 className="text-sm font-bold uppercase tracking-wider text-accent-teal mb-4">

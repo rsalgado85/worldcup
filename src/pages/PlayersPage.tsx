@@ -392,7 +392,7 @@ export function PlayersPage() {
   }
 
   return (
-    <div className="p-5 md:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-6">
+    <div className="p-5 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
         <div className="flex items-center gap-3">
@@ -400,7 +400,7 @@ export function PlayersPage() {
             <UserRound size={20} className="text-accent-teal" />
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-black text-white">Top Jugadores</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">Top Jugadores</h1>
             <p className="text-sm text-text-secondary">{players.length} goleadores · {totalGoals} goles en el torneo</p>
           </div>
         </div>
@@ -446,7 +446,7 @@ export function PlayersPage() {
       </div>
 
       {/* Player grid — HyruleDex style */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {filtered.map((player, i) => (
           <PlayerCard
             key={player.name}
