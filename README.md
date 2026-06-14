@@ -17,8 +17,8 @@
 | Estadios | ✅ | 16 sedes por país anfitrión |
 | Bracket | ✅ | Fase eliminatoria completa |
 | Rankings | ✅ | Goleadores y tabla de equipos |
-| Jugadores | ⏳ | Necesita API key de API-Football |
-| Predicciones | ⏳ | Próximamente |
+| Jugadores | ✅ | Goleadores del torneo, stats, búsqueda |
+| Predicciones | ✅ | Proyecciones de clasificación por grupo |
 
 ---
 
