@@ -123,7 +123,7 @@ function MobileBottomNav() {
 
   return (
     <nav
-      className="lg:hidden flex items-center justify-around px-1 py-2 flex-shrink-0"
+      className="lg:hidden flex items-center justify-around px-2 py-3 flex-shrink-0"
       style={{
         backgroundColor: isDark ? 'rgba(6, 11, 21, 0.97)' : 'rgba(255, 255, 255, 0.97)',
         borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
@@ -143,13 +143,13 @@ function MobileBottomNav() {
           <button
             key={item.path}
             onClick={() => navigate(item.path)}
-            className="flex flex-col items-center gap-0.5 py-1.5 px-2 min-w-0 transition-all active:scale-90 rounded-xl"
+            className="flex flex-col items-center gap-1 py-3 px-3 min-w-0 transition-all active:scale-90 rounded-xl"
             style={{ color: isActive ? '#14B8A6' : isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)' }}
             aria-label={label}
           >
-            <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+            <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
             <span
-              className="text-[9px] font-semibold truncate max-w-full"
+              className="text-[11px] font-semibold truncate max-w-full"
               style={{ opacity: isActive ? 1 : 0.7 }}
             >
               {label}

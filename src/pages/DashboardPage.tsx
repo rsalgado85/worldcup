@@ -484,7 +484,7 @@ export function DashboardPage() {
           <div className="blob w-16 h-16 bg-yellow-400/25 top-12 right-12" style={{ animationDelay: '0.7s' }} />
         </div>
         <div className="relative z-10 mb-2">
-          <img src="/images/trophy/trophy-golden.png" alt="FIFA World Cup Trophy" className="w-28 h-auto drop-shadow-[0_0_40px_rgba(245,166,35,0.3)] animate-fade-up" />
+          <img src="/images/fifa-logo-official.png" alt="FIFA" className="w-48 h-auto brightness-0 invert drop-shadow-[0_0_30px_rgba(255,255,255,0.15)] animate-fade-up" />
         </div>
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight text-center animate-fade-up" style={{ animationDelay: '0.1s' }}>COPA MUNDIAL <span className="text-accent-teal">2026</span></h1>
         <p className="text-sm md:text-base text-accent-teal font-medium mt-1 animate-fade-up" style={{ animationDelay: '0.15s' }}>TRES PAÍSES. UN MUNDO. UNA COPA.</p>
