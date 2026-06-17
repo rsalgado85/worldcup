@@ -5,6 +5,7 @@ import {
   Users, Swords, MapPin, LineChart, Brain,
   ChevronLeft, ChevronRight,
   Sun, Moon, Languages,
+  Info, Mail, Heart,
 } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 
@@ -17,6 +18,12 @@ const allItems = [
   { path: '/bracket', label: 'Bracket', icon: Trophy },
   { path: '/rankings', label: 'Rankings', icon: LineChart },
   { path: '/predictions', label: 'Predicciones', icon: Brain },
+];
+
+const secondaryItems = [
+  { path: '/about', label: 'Info', icon: Info },
+  { path: '/contact', label: 'Contacto', icon: Mail },
+  { path: '/donate', label: 'Donar', icon: Heart },
 ];
 
 // ─── Mobile Sidebar ───
@@ -94,6 +101,13 @@ function SidebarContent({ collapsed, onClose }: { collapsed: boolean; onClose?: 
       {/* Nav Items */}
       <nav className="flex-1 px-5 py-6 space-y-3 overflow-y-auto">
         {allItems.map((item) => (
+          <SidebarNavItem key={item.path} item={item} collapsed={collapsed} onClose={onClose} />
+        ))}
+        {/* Divider */}
+        <div className="pt-2 pb-1">
+          <div className="border-t border-white/5" />
+        </div>
+        {secondaryItems.map((item) => (
           <SidebarNavItem key={item.path} item={item} collapsed={collapsed} onClose={onClose} />
         ))}
       </nav>

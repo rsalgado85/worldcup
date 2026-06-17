@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, LayoutDashboard, Users, Swords, MapPin, Trophy, LineChart } from 'lucide-react';
@@ -61,9 +61,24 @@ export function AppLayout() {
           className="hidden lg:block py-3 px-4 text-center flex-shrink-0"
           style={{ borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}` }}
         >
-          <p className="text-[10px]" style={{ color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)' }}>
-            &copy; {new Date().getFullYear()} WorldCup Insight — FIFA World Cup 2026&trade;
-          </p>
+          <div className="flex items-center justify-center gap-6">
+            <Link to="/about" className="text-[10px] hover:text-accent-teal transition-colors"
+              style={{ color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)' }}>
+              {language === 'es' ? 'Sobre nosotros' : 'About'}
+            </Link>
+            <Link to="/contact" className="text-[10px] hover:text-accent-teal transition-colors"
+              style={{ color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)' }}>
+              {language === 'es' ? 'Contacto' : 'Contact'}
+            </Link>
+            <Link to="/donate" className="text-[10px] hover:text-accent-teal transition-colors"
+              style={{ color: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)' }}>
+              {language === 'es' ? 'Donar' : 'Donate'}
+            </Link>
+            <span className="text-[10px]"
+              style={{ color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)' }}>
+              &copy; {new Date().getFullYear()} WorldCup Insight
+            </span>
+          </div>
         </footer>
       </div>
     </div>

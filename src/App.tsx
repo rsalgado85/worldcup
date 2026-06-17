@@ -9,6 +9,9 @@ import { StadiumsPage } from '@/pages/StadiumsPage';
 import { BracketPage } from '@/pages/BracketPage';
 import { RankingsPage } from '@/pages/RankingsPage';
 import { PredictionsPage } from '@/pages/PredictionsPage';
+import AboutPage from '@/pages/AboutPage';
+import ContactPage from '@/pages/ContactPage';
+import DonatePage from '@/pages/DonatePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +38,9 @@ export default function App() {
             <Route path="/bracket" element={<BracketPage />} />
             <Route path="/rankings" element={<RankingsPage />} />
             <Route path="/predictions" element={<PredictionsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/donate" element={<DonatePage />} />
           </Route>
         </Routes>
       </BrowserRouter>
