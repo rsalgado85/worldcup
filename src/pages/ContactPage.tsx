@@ -70,7 +70,7 @@ export default function ContactPage() {
         <a href={githubUrl} target="_blank" rel="noopener noreferrer"
           className="flex items-center gap-4 bg-navy-700/30 rounded-2xl border border-border-card p-5 hover:border-accent-teal/30 hover:bg-navy-700/50 transition-all group">
           <div className="w-10 h-10 rounded-xl bg-accent-teal/10 flex items-center justify-center shrink-0">
-            <Github size={20} className="text-accent-teal" />
+            <ExternalLink size={20} className="text-accent-teal" />
           </div>
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">{t.github}</p>
